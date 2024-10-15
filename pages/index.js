@@ -7,13 +7,15 @@ export default function Home() {
     <div className="container">
       <Head>
         <title>Terminus Est - Another Web Developer</title>
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className='flex flex-col justify-center items-center'>
         <Header title="Working..." />
+
         <p className="description">
-          <code>Please wait...</code>
+          <code className='text-xs'>Please wait...</code>
         </p>
       </main>
 

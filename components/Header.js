@@ -1,3 +1,3 @@
 export default function Header({ title }) {
-  return <h1 className="title">{title}</h1>
+  return <h1 className="text-2xl mb-4">{title}</h1>
 }
