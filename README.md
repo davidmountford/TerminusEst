@@ -1,8 +1,7 @@
 # TerminusEst
 Thank you for visiting.
 
-## UsageSPDX-FileCopyrightText: 2024 David Mountford
-
+## Start Locally
 ```bash
 npm ci
 npm run dev
