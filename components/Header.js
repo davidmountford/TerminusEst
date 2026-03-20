@@ -1,3 +1,7 @@
 export default function Header({ title }) {
-  return <h1 className="title">{title}</h1>
+  return (
+    <h1 className="text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl">
+      {title}
+    </h1>
+  )
 }
