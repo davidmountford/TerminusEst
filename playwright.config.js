@@ -1,14 +1,21 @@
 const { defineConfig, devices } = require('@playwright/test')
 
-const devServerCommand =
-  process.platform === 'win32' ? 'npm.cmd run dev' : 'npm run dev'
+const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+const configuredWebServerCommand =
+  process.env.PLAYWRIGHT_WEB_SERVER_COMMAND || 'npm run dev'
+const webServerCommand =
+  process.platform === 'win32'
+    ? configuredWebServerCommand.replace(/^npm(?=\s|$)/, npmCommand)
+    : configuredWebServerCommand
 
 module.exports = defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: 'list',
+  reporter: process.env.CI
+    ? [['list'], ['html', { open: 'never' }]]
+    : 'list',
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry'
@@ -20,7 +27,7 @@ module.exports = defineConfig({
     }
   ],
   webServer: {
-    command: devServerCommand,
+    command: webServerCommand,
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000
