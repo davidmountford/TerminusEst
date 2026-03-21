@@ -20,19 +20,19 @@
 - `primary-glow`: `#a855f7`
 - `primary-soft`: `#d8b4fe`
 - `secondary`: `#00e5cc`
-- `accent`: `#ff2d7e`
+- `signal`: `#ff2d7e`
 - `text-primary`: `#e8e0f5`
 
 ### Usage Rules
 - Use `primary` for structure, framing, and depth.
 - Use `primary-glow` for emphasis, bloom, and luminous edges.
 - Use `secondary` for active states, CTAs, highlights, and status indicators.
-- Use `accent` sparingly for warning heat, punch, and select contrast moments.
+- Use `signal` sparingly for warning heat, punch, and select contrast moments.
 - Use `cyber-black` and other dark neutrals as the default canvas.
 - Keep `text-primary` or close variants as the default readable foreground.
 
 ### Tailwind Usage
-- Prefer project theme tokens such as `bg-primary`, `text-secondary`, `border-primary/35`, and `text-accent`.
+- Prefer project theme tokens such as `bg-primary`, `text-secondary`, `border-primary/35`, and `text-signal`.
 - Use stock Tailwind colors only when they are not user-facing theme colors.
 - Do not substitute approximate Tailwind violets/teals when the exact brand colors matter.
 
