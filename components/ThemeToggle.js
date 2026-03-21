@@ -1,3 +1,5 @@
+'use client'
+
 import { Circle, Lightbulb, Moon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'

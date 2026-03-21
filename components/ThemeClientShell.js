@@ -1,10 +1,12 @@
+'use client'
+
 import { useEffect, useState } from 'react'
+
 import ThemeToggle from '@components/ThemeToggle'
-import '@styles/globals.css'
 
 const THEME_STORAGE_KEY = 'theme-preference'
 
-function Application({ Component, pageProps }) {
+export default function ThemeClientShell({ children }) {
   const [themeMode, setThemeMode] = useState('system')
 
   useEffect(() => {
@@ -40,7 +42,6 @@ function Application({ Component, pageProps }) {
 
   const handleThemeChange = (nextMode) => {
     setThemeMode(nextMode)
-
     window.localStorage.setItem(THEME_STORAGE_KEY, nextMode)
 
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -55,9 +56,7 @@ function Application({ Component, pageProps }) {
     <>
       <ThemeToggle mode={themeMode} onChange={handleThemeChange} />
 
-      <Component {...pageProps} />
+      {children}
     </>
   )
 }
-
-export default Application

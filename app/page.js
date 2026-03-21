@@ -1,8 +1,11 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import Head from 'next/head'
+
 import { Search } from 'lucide-react'
-import Header from '@components/Header'
+
 import Footer from '@components/Footer'
+import Header from '@components/Header'
 
 const SKILLS = [
   'PHP',
@@ -18,7 +21,7 @@ const SKILLS = [
   'Prompting',
 ]
 
-export default function Home() {
+export default function HomePage() {
   const [glitchPulse, setGlitchPulse] = useState(false)
   const [activeSkill, setActiveSkill] = useState(null)
 
@@ -66,30 +69,31 @@ export default function Home() {
 
   return (
     <div className="min-h-screen px-6 py-10 text-foreground sm:py-16">
-      <Head>
-        <title>Terminus Est - Another Web Developer</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center sm:min-h-[calc(100vh-8rem)]">
         <section className="w-full rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-[0_24px_80px_rgba(24,20,34,0.16)] backdrop-blur sm:p-12">
           <div className="flex flex-col gap-6">
-            <span className="inline-flex w-fit items-baseline gap-0.5 font-mono text-xs uppercase tracking-[0.3em] text-primary before:content-['//_'] before:text-primary/65">
+            <span className="inline-flex w-fit items-baseline gap-0.5 font-mono text-xs uppercase tracking-[0.3em] text-primary before:text-primary/65 before:content-['//_']">
               <span>Init TerminusEst</span>
+
               <span className="terminal-cursor text-secondary" aria-hidden="true" />
             </span>
+
             <Header title="David Mountford" pulsing={glitchPulse} />
+
             <div className="max-w-2xl space-y-4 text-lg leading-8 text-muted-foreground">
               <p>
                 <span className="inline-flex items-center gap-2">
                   <Search className="size-5 text-primary" aria-hidden="true" />
+
                   <span>Locating Software Engineer...</span>
                 </span>
               </p>
+
               <div className="space-y-3">
                 <p className="font-mono text-sm tracking-[0.08em] text-muted-foreground">
                   Selected Skills;
                 </p>
+
                 <div className="flex flex-wrap gap-3">
                   {SKILLS.map((skill) => (
                     <span
@@ -104,8 +108,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
             <div className="flex flex-wrap items-center gap-3 font-mono text-sm tracking-[0.14em] text-primary">
               <span>Begin Trace... //+</span>
+
               <a
                 href="https://www.linkedin.com/in/davidsmountford/"
                 target="_blank"
