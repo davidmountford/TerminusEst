@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test')
 
 test('style lab smoke test', async ({ page }) => {
-  await page.goto('/__style-lab')
+  await page.goto('/style-lab')
 
   await expect(page).toHaveTitle(/Style Lab/i)
   await expect(page.getByRole('heading', { name: 'Style Lab' })).toBeVisible()
