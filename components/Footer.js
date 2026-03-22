@@ -1,9 +1,3 @@
-import styles from './Footer.module.css'
-
 export default function Footer() {
-  return (
-    <>
-      <hr />
-    </>
-  )
+  return <footer className="h-0 overflow-hidden" aria-hidden="true" />
 }
