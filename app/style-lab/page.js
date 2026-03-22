@@ -144,6 +144,10 @@ export default function StyleLab() {
               <CardContent className="space-y-4">
                 <div className="glitch-divider" />
 
+                <p className="glitch-text font-display text-lg text-primary-soft">
+                  Signal drift detected
+                </p>
+
                 <div className="flex flex-wrap gap-3">
                   <Badge>token</Badge>
 
