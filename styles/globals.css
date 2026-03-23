@@ -280,20 +280,35 @@ body::after {
   animation: drift-secondary 15s ease-in-out infinite alternate;
 }
 
-.parallax-card {
+.parallax-panel {
+  position: relative;
   --tilt-x: 0deg;
   --tilt-y: 0deg;
+}
+
+.parallax-card {
   position: relative;
+  width: 100%;
+  transform-origin: center;
   transform-style: preserve-3d;
-  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+  transform: perspective(1100px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) scale3d(1.01, 1.01, 1.01);
+  transition: transform 70ms ease-out, box-shadow 120ms ease-out;
   clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
   box-shadow:
     0 0 0 1px rgba(0, 229, 204, 0.1),
     0 0 40px rgba(123, 47, 255, 0.25),
     0 0 80px rgba(0, 229, 204, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backface-visibility: hidden;
   will-change: transform;
+}
+
+.parallax-panel:hover .parallax-card {
+  box-shadow:
+    0 0 0 1px rgba(0, 229, 204, 0.16),
+    0 0 56px rgba(123, 47, 255, 0.32),
+    0 0 96px rgba(0, 229, 204, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .parallax-card::before {
@@ -301,6 +316,7 @@ body::after {
   position: absolute;
   top: 0;
   right: 0;
+  pointer-events: none;
   width: 50px;
   height: 50px;
   background: linear-gradient(135deg, transparent 50%, rgba(0, 229, 204, 0.7) 50%);
@@ -312,6 +328,7 @@ body::after {
   position: absolute;
   bottom: 0;
   left: 0;
+  pointer-events: none;
   width: 50px;
   height: 50px;
   background: linear-gradient(315deg, transparent 50%, rgba(123, 47, 255, 0.6) 50%);

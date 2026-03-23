@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import ParallaxPanel from '@/components/ParallaxPanel'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -134,7 +135,10 @@ export default function StyleLab() {
               </CardContent>
             </Card>
 
-            <Card className="parallax-card overflow-hidden bg-[rgba(10,8,18,0.78)]">
+            <ParallaxPanel
+              className="h-full"
+              innerClassName="overflow-hidden rounded-xl border border-border bg-[rgba(10,8,18,0.78)] text-card-foreground shadow-sm"
+            >
               <CardHeader>
                 <CardTitle>Effects Check</CardTitle>
 
@@ -156,7 +160,7 @@ export default function StyleLab() {
                   <Badge variant="outline">border</Badge>
                 </div>
               </CardContent>
-            </Card>
+            </ParallaxPanel>
           </div>
         </section>
       </div>

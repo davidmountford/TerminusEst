@@ -6,6 +6,7 @@ import { Search } from 'lucide-react'
 
 import Footer from '@components/Footer'
 import Header from '@components/Header'
+import ParallaxPanel from '@components/ParallaxPanel'
 
 const INTRO_QUOTES = [
   'The sky above the port was the colour of television, tuned to static...',
@@ -14,14 +15,20 @@ const INTRO_QUOTES = [
   'What if a cyber brain could possibly generate its own ghost?',
 ]
 const HEADER_TITLE = 'David Mountford'
+const INIT_LABEL = 'Init TerminusEst'
+const TRACE_LABEL = 'Begin Trace...'
 const SKILLS = [
   'PHP',
   'Laravel',
   'Symfony',
+  'Tailwind',
   'JS',
   'TS',
   'React',
+  'Next',
   'Vue',
+  'Nuxt',
+  'CSS',
   'MySQL',
   'AI',
   'Agentic AI',
@@ -56,6 +63,9 @@ export default function HomePage() {
   const [introQuote, setIntroQuote] = useState(INTRO_QUOTES[0])
   const [displayTitle, setDisplayTitle] = useState(INTRO_QUOTES[0])
   const [titleMode, setTitleMode] = useState('quote')
+  const [initLabel, setInitLabel] = useState('')
+  const [traceLabel, setTraceLabel] = useState('')
+  const [showTraceIcons, setShowTraceIcons] = useState(false)
 
   useEffect(() => {
     const nextQuote = INTRO_QUOTES[Math.floor(Math.random() * INTRO_QUOTES.length)]
@@ -87,6 +97,45 @@ export default function HomePage() {
 
     return () => {
       window.clearTimeout(timeoutId)
+    }
+  }, [])
+
+  useEffect(() => {
+    let initIntervalId
+    let traceStartTimeoutId
+    let traceIntervalId
+    let iconTimeoutId
+
+    let initIndex = 0
+    initIntervalId = window.setInterval(() => {
+      initIndex += 1
+      setInitLabel(INIT_LABEL.slice(0, initIndex))
+
+      if (initIndex >= INIT_LABEL.length) {
+        window.clearInterval(initIntervalId)
+      }
+    }, 40)
+
+    traceStartTimeoutId = window.setTimeout(() => {
+      let traceIndex = 0
+      traceIntervalId = window.setInterval(() => {
+        traceIndex += 1
+        setTraceLabel(TRACE_LABEL.slice(0, traceIndex))
+
+        if (traceIndex >= TRACE_LABEL.length) {
+          window.clearInterval(traceIntervalId)
+          iconTimeoutId = window.setTimeout(() => {
+            setShowTraceIcons(true)
+          }, 120)
+        }
+      }, 36)
+    }, 260)
+
+    return () => {
+      window.clearInterval(initIntervalId)
+      window.clearTimeout(traceStartTimeoutId)
+      window.clearInterval(traceIntervalId)
+      window.clearTimeout(iconTimeoutId)
     }
   }, [])
 
@@ -174,22 +223,20 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen px-6 py-10 text-foreground sm:py-16">
-      <main className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center sm:min-h-[calc(100vh-8rem)]">
-        <section className="w-full rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-[0_24px_80px_rgba(24,20,34,0.16)] backdrop-blur sm:p-12">
+      <main className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl items-center justify-center sm:min-h-[calc(100vh-8rem)]">
+        <ParallaxPanel
+          as="section"
+          className="w-full"
+          innerClassName="rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-[0_24px_80px_rgba(24,20,34,0.16)] backdrop-blur sm:p-12"
+        >
           <div className="flex flex-col gap-6">
             <span className="inline-flex w-fit items-baseline gap-0.5 font-mono text-xs uppercase tracking-[0.3em] text-primary before:text-primary/65 before:content-['//_']">
-              <span>Init TerminusEst</span>
+              <span>{initLabel}</span>
 
               <span className="terminal-cursor text-secondary" aria-hidden="true" />
             </span>
 
-            <div
-              className={`overflow-hidden transition-[min-height] duration-700 ease-out ${
-                titleMode === 'resolved'
-                  ? 'min-h-[3.25rem] sm:min-h-[4.5rem]'
-                  : 'min-h-[7.5rem] sm:min-h-[8.5rem]'
-              }`}
-            >
+            <div className="min-h-[4.75rem] w-full overflow-hidden sm:min-h-[5.75rem]">
               <Header
                 title={
                   titleMode === 'resolved' ? (
@@ -213,15 +260,15 @@ export default function HomePage() {
                   )
                 }
                 pulsing={glitchPulse}
-                className={`max-w-[24ch] leading-tight transition-all duration-700 ease-out sm:max-w-[28ch] ${
+                className={`leading-tight transition-all duration-700 ease-out ${
                   titleMode === 'resolved'
-                    ? 'font-display text-[3.35rem] tracking-tight text-foreground min-[360px]:text-5xl sm:text-6xl'
+                    ? 'font-display text-[3rem] tracking-tight text-foreground min-[360px]:text-[3.4rem] sm:text-5xl'
                     : 'font-mono text-2xl tracking-[0.04em] text-signal sm:text-3xl'
                 }`}
               />
             </div>
 
-            <div className="max-w-2xl space-y-4 text-lg leading-8 text-muted-foreground">
+            <div className="max-w-3xl space-y-4 text-lg leading-8 text-muted-foreground">
               <p>
                 <span className="inline-flex items-center gap-2">
                   <Search className="size-5 text-primary" aria-hidden="true" />
@@ -250,11 +297,11 @@ export default function HomePage() {
               </div>
             </div>
 
-            <hr className="glitch-divider w-full max-w-2xl border-0" />
+            <hr className="glitch-divider w-full max-w-3xl border-0" />
 
             <div className="flex flex-wrap items-center gap-3 font-mono text-sm tracking-[0.14em] text-primary">
               <span>
-                Begin Trace...{' '}
+                {traceLabel}{' '}
                 <span className="inline-block animate-spin">/</span>
               </span>
 
@@ -263,7 +310,14 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub profile"
-                className="inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition hover:border-primary/35 hover:bg-primary/12 hover:text-primary"
+                aria-hidden={!showTraceIcons}
+                tabIndex={showTraceIcons ? undefined : -1}
+                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
+                  showTraceIcons
+                    ? 'translate-y-0 opacity-100'
+                    : 'pointer-events-none translate-y-2 opacity-0'
+                }`}
+                style={{ transitionDelay: showTraceIcons ? '0ms' : '0ms' }}
               >
                 <svg
                   className="size-4"
@@ -280,7 +334,14 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn profile"
-                className="inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition hover:border-primary/35 hover:bg-primary/12 hover:text-primary"
+                aria-hidden={!showTraceIcons}
+                tabIndex={showTraceIcons ? undefined : -1}
+                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
+                  showTraceIcons
+                    ? 'translate-y-0 opacity-100'
+                    : 'pointer-events-none translate-y-2 opacity-0'
+                }`}
+                style={{ transitionDelay: showTraceIcons ? '90ms' : '0ms' }}
               >
                 <svg
                   className="size-4"
@@ -293,7 +354,7 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-        </section>
+        </ParallaxPanel>
       </main>
 
       <Footer />
