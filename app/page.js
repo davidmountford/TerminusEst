@@ -102,7 +102,7 @@ export default function HomePage() {
     startTimeoutId = window.setTimeout(() => {
       setTitleMode('encrypting')
 
-      const encryptDuration = 1500
+      const encryptDuration = 1000
       const startedAt = window.performance.now()
 
       const encryptTick = (now) => {
@@ -134,9 +134,9 @@ export default function HomePage() {
                   window.clearInterval(typeIntervalId)
                   setTitleMode('resolved')
                 }
-              }, 35)
+              }, 28)
             }
-          }, 25)
+          }, 15)
 
           return
         }
@@ -145,7 +145,7 @@ export default function HomePage() {
       }
 
       encryptFrameId = window.requestAnimationFrame(encryptTick)
-    }, 800)
+    }, 450)
 
     return () => {
       window.clearTimeout(startTimeoutId)
@@ -192,16 +192,25 @@ export default function HomePage() {
             >
               <Header
                 title={
-                  <>
-                    <span>{displayTitle}</span>
+                  titleMode === 'resolved' ? (
+                    <>
+                      <span className="text-signal">D</span>
+                      <span>avid </span>
+                      <span className="text-signal">M</span>
+                      <span>ountford</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{displayTitle}</span>
 
-                    {titleMode !== 'resolved' && (
-                      <span
-                        className="terminal-cursor ml-1 inline-block align-baseline text-signal"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </>
+                      {titleMode !== 'resolved' && (
+                        <span
+                          className="terminal-cursor ml-1 inline-block align-baseline text-signal"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </>
+                  )
                 }
                 pulsing={glitchPulse}
                 className={`max-w-[24ch] leading-tight transition-all duration-700 ease-out sm:max-w-[28ch] ${
@@ -223,7 +232,7 @@ export default function HomePage() {
 
               <div className="space-y-3">
                 <p className="font-mono text-sm tracking-[0.08em] text-muted-foreground">
-                  Selected Skills =&gt;
+                  Selected Skills <span className="text-signal">=&gt;</span>
                 </p>
 
                 <div className="flex flex-wrap gap-3">
@@ -240,6 +249,8 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+
+            <hr className="glitch-divider w-full max-w-2xl border-0" />
 
             <div className="flex flex-wrap items-center gap-3 font-mono text-sm tracking-[0.14em] text-primary">
               <span>
