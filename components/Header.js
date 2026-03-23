@@ -4,12 +4,12 @@ export default function Header({ title, className, pulsing = false }) {
   return (
     <h1
       className={cn(
-        'glitch-text font-display text-5xl font-semibold tracking-tight text-foreground sm:text-6xl',
+        'glitch-text font-display text-4xl font-semibold tracking-tight text-foreground sm:text-6xl',
         pulsing && 'glitch-text-active',
         className
       )}
     >
-      {title}
+      <span>{title}</span>
     </h1>
   )
 }
