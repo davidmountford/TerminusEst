@@ -291,17 +291,17 @@ export default function HomePage() {
                   <div className="absolute inset-0">
                     <Header
                       title={
-                    <>
-                      <span className="text-signal">D</span>
-                      <span>avid </span>
-                      <span className="text-signal">M</span>
-                      <span>ountford</span>
-                    </>
-                  }
-                  pulsing={glitchTarget === 'title'}
-                  className={`leading-tight font-display text-[3rem] tracking-tight text-foreground transition-opacity duration-500 ease-out min-[360px]:text-[3.4rem] sm:text-5xl ${
-                    isResolved ? 'opacity-100' : 'opacity-0'
-                  }`}
+                        <>
+                          <span className="text-signal">D</span>
+                          <span>avid </span>
+                          <span className="text-signal">M</span>
+                          <span>ountford</span>
+                        </>
+                      }
+                      pulsing={glitchTarget === 'title'}
+                      className={`leading-tight font-display text-[3rem] tracking-tight text-foreground transition-opacity duration-500 ease-out min-[360px]:text-[3.4rem] sm:text-5xl ${
+                        isResolved ? 'opacity-100' : 'opacity-0'
+                      }`}
                     />
                   </div>
 
