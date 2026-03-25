@@ -268,9 +268,26 @@ export default function HomePage() {
           as="section"
           className="w-full"
           frameClassName="border border-border/70 bg-card/95 shadow-[0_24px_80px_rgba(24,20,34,0.16)]"
-          innerClassName="p-8 sm:p-12"
+          innerClassName="relative p-8 sm:p-12"
         >
-          <div className="flex flex-col gap-6">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-0 right-0 z-0 h-64 w-64 translate-x-[33%] translate-y-[33%] opacity-60 sm:h-80 sm:w-80"
+            style={{
+              background:
+                'radial-gradient(circle at 35% 35%, rgba(123,47,255,0.16), rgba(0,229,204,0.08) 58%, rgba(0,229,204,0.02) 100%)',
+              WebkitMaskImage: 'url(/kamon_bw.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+              WebkitMaskSize: 'contain',
+              maskImage: 'url(/kamon_bw.svg)',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              maskSize: 'contain'
+            }}
+          />
+
+          <div className="relative z-10 flex flex-col gap-6">
             <span className="inline-flex w-fit items-baseline gap-0.5 font-mono text-xs uppercase tracking-[0.3em] text-primary before:text-primary/65 before:content-['//_']">
               {initReady ? (
                 <>

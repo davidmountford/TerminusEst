@@ -24,7 +24,21 @@ const shareTechMono = Share_Tech_Mono({
 
 export const metadata = {
   title: 'David Mountford | Terminus Est',
-  description: 'I build web apps, platforms, and AI tooling, omae.'
+  description: 'I build web apps, platforms, and AI tooling, omae.',
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png'
+  }
+}
+
+export const viewport = {
+  themeColor: '#000000'
 }
 
 export default function RootLayout({ children }) {
