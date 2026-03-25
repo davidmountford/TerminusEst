@@ -3,10 +3,13 @@
 import { cn } from '@/lib/utils'
 
 const MAX_TILT = 8
+const FRAME_TILT = 0.9
+const SURFACE_TILT = 0.12
 
 export default function ParallaxPanel({
   as: Tag = 'div',
   className,
+  frameClassName,
   innerClassName,
   children,
   ...props
@@ -17,9 +20,10 @@ export default function ParallaxPanel({
     }
 
     const rect = event.currentTarget.getBoundingClientRect()
-    const tiltLayer = event.currentTarget.firstElementChild
+    const frameLayer = event.currentTarget.querySelector('[data-parallax-frame]')
+    const tiltLayer = event.currentTarget.querySelector('[data-parallax-surface]')
 
-    if (!tiltLayer) {
+    if (!frameLayer || !tiltLayer) {
       return
     }
 
@@ -28,19 +32,21 @@ export default function ParallaxPanel({
     const tiltY = (x - 0.5) * MAX_TILT * 2
     const tiltX = (0.5 - y) * MAX_TILT * 2
 
-    tiltLayer.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`)
-    tiltLayer.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`)
+    frameLayer.style.transform = `perspective(1400px) rotateX(${(tiltX * FRAME_TILT).toFixed(2)}deg) rotateY(${(tiltY * FRAME_TILT).toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`
+    tiltLayer.style.transform = `perspective(1100px) rotateX(${(tiltX * SURFACE_TILT).toFixed(2)}deg) rotateY(${(tiltY * SURFACE_TILT).toFixed(2)}deg)`
   }
 
   const resetTilt = (event) => {
-    const tiltLayer = event.currentTarget.firstElementChild
+    const frameLayer = event.currentTarget.querySelector('[data-parallax-frame]')
+    const tiltLayer = event.currentTarget.querySelector('[data-parallax-surface]')
 
-    if (!tiltLayer) {
+    if (!frameLayer || !tiltLayer) {
       return
     }
 
-    tiltLayer.style.setProperty('--tilt-x', '0deg')
-    tiltLayer.style.setProperty('--tilt-y', '0deg')
+    frameLayer.style.transform =
+      'perspective(1400px) rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1.01)'
+    tiltLayer.style.transform = 'perspective(1100px) rotateX(0deg) rotateY(0deg)'
   }
 
   return (
@@ -51,7 +57,11 @@ export default function ParallaxPanel({
       onPointerCancel={resetTilt}
       {...props}
     >
-      <div className={cn('parallax-card h-full', innerClassName)}>{children}</div>
+      <div data-parallax-frame className={cn('parallax-frame', frameClassName)}>
+        <div data-parallax-surface className={cn('parallax-card h-full', innerClassName)}>
+          {children}
+        </div>
+      </div>
     </Tag>
   )
 }
