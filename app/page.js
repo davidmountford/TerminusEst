@@ -37,6 +37,7 @@ const SKILLS = [
 
 const ENCRYPTION_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:',.<>/?"
+const SECOND_INITIAL_INDEX = HEADER_TITLE.indexOf('M', 1)
 
 function createEncryptedFrame(target, progress) {
   const encryptedCharacters = Math.floor(progress * target.length)
@@ -57,6 +58,22 @@ function createEncryptedFrame(target, progress) {
     .join('')
 }
 
+function renderStyledHeaderTitle(value) {
+  const firstInitial = value.slice(0, 1)
+  const firstSegment = value.slice(1, SECOND_INITIAL_INDEX)
+  const secondInitial = value.slice(SECOND_INITIAL_INDEX, SECOND_INITIAL_INDEX + 1)
+  const secondSegment = value.slice(SECOND_INITIAL_INDEX + 1)
+
+  return (
+    <>
+      {firstInitial ? <span className="text-signal">{firstInitial}</span> : null}
+      {firstSegment ? <span>{firstSegment}</span> : null}
+      {secondInitial ? <span className="text-signal">{secondInitial}</span> : null}
+      {secondSegment ? <span>{secondSegment}</span> : null}
+    </>
+  )
+}
+
 export default function HomePage() {
   const [glitchTarget, setGlitchTarget] = useState(null)
   const [introQuote, setIntroQuote] = useState(INTRO_QUOTES[0])
@@ -67,6 +84,7 @@ export default function HomePage() {
   const [traceLabel, setTraceLabel] = useState('')
   const [showTraceIcons, setShowTraceIcons] = useState(false)
   const isResolved = titleMode === 'resolved'
+  const isTypingOrResolved = titleMode === 'typing' || isResolved
   const initReady = initLabel === INIT_LABEL
 
   useEffect(() => {
@@ -276,36 +294,26 @@ export default function HomePage() {
                 <div className="relative min-h-[5.75rem] w-full overflow-hidden sm:min-h-[4.75rem]">
                   <div className="pointer-events-none invisible">
                     <Header
-                      title={
-                        <>
-                          <span className="text-signal">D</span>
-                          <span>avid </span>
-                          <span className="text-signal">M</span>
-                          <span>ountford</span>
-                        </>
-                      }
+                      title={renderStyledHeaderTitle(HEADER_TITLE)}
                       className="leading-tight font-display text-[3rem] tracking-tight text-foreground min-[360px]:text-[3.4rem] sm:text-5xl"
                     />
                   </div>
 
-                  <div className="absolute inset-0">
-                    <Header
-                      title={
-                        <>
-                          <span className="text-signal">D</span>
-                          <span>avid </span>
-                          <span className="text-signal">M</span>
-                          <span>ountford</span>
-                        </>
-                      }
-                      pulsing={glitchTarget === 'title'}
-                      className={`leading-tight font-display text-[3rem] tracking-tight text-foreground transition-opacity duration-500 ease-out min-[360px]:text-[3.4rem] sm:text-5xl ${
-                        isResolved ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    />
-                  </div>
+                  {isTypingOrResolved ? (
+                    <div className="absolute inset-0">
+                      <Header
+                        title={
+                          isResolved
+                            ? renderStyledHeaderTitle(HEADER_TITLE)
+                            : renderStyledHeaderTitle(displayTitle)
+                        }
+                        pulsing={glitchTarget === 'title'}
+                        className="origin-top-left leading-tight font-display text-[3rem] tracking-tight text-foreground min-[360px]:text-[3.4rem] sm:text-5xl"
+                      />
+                    </div>
+                  ) : null}
 
-                  {!isResolved && (
+                  {!isTypingOrResolved && (
                     <div
                       aria-hidden="true"
                       className={`absolute inset-0 flex items-start overflow-hidden leading-tight font-mono text-2xl tracking-[0.04em] text-signal sm:text-3xl ${
