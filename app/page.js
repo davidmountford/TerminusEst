@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { Search } from 'lucide-react'
-
 import Footer from '@components/Footer'
 import Header from '@components/Header'
 import ParallaxPanel from '@components/ParallaxPanel'
@@ -15,8 +13,10 @@ const INTRO_QUOTES = [
   'What if a cyber brain could possibly generate its own ghost?',
 ]
 const HEADER_TITLE = 'David Mountford'
+const HEADER_SUBTITLE = 'Software Engineer'
 const INIT_LABEL = 'Init TerminusEst'
 const TRACE_LABEL = 'Begin Trace...'
+const GLITCH_DURATION_MS = 1000
 const SKILLS = [
   'PHP',
   'Laravel',
@@ -58,14 +58,16 @@ function createEncryptedFrame(target, progress) {
 }
 
 export default function HomePage() {
-  const [glitchPulse, setGlitchPulse] = useState(false)
-  const [activeSkill, setActiveSkill] = useState(null)
+  const [glitchTarget, setGlitchTarget] = useState(null)
   const [introQuote, setIntroQuote] = useState(INTRO_QUOTES[0])
   const [displayTitle, setDisplayTitle] = useState(INTRO_QUOTES[0])
   const [titleMode, setTitleMode] = useState('quote')
+  const [showSubtitle, setShowSubtitle] = useState(false)
   const [initLabel, setInitLabel] = useState('')
   const [traceLabel, setTraceLabel] = useState('')
   const [showTraceIcons, setShowTraceIcons] = useState(false)
+  const isResolved = titleMode === 'resolved'
+  const initReady = initLabel === INIT_LABEL
 
   useEffect(() => {
     const nextQuote = INTRO_QUOTES[Math.floor(Math.random() * INTRO_QUOTES.length)]
@@ -76,29 +78,51 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    let timeoutId
+    let cycleTimeoutId
+    let clearTimeoutId
 
-    const nextNameDelay = () => {
-      const weightedHigh = Math.random() < 0.5
-      const seconds = weightedHigh ? 10 + Math.random() * 20 : 1 + Math.random() * 9
-      return Math.round(seconds * 1000)
+    const nextAmbientGlitchDelay = () => {
+      const favorLongerDelay = Math.random() < 0.8
+
+      if (favorLongerDelay) {
+        return Math.round((5 + Math.random() * 5) * 1000)
+      }
+
+      return Math.round((3 + Math.random() * 2) * 1000)
     }
 
-    const pulse = () => {
-      setGlitchPulse(true)
-      window.setTimeout(() => {
-        setGlitchPulse(false)
-      }, 450)
+    const pulseAmbient = () => {
+      const targets = ['title', ...SKILLS.map((skill) => `skill:${skill}`)]
 
-      timeoutId = window.setTimeout(pulse, nextNameDelay())
+      if (showSubtitle) {
+        targets.push('subtitle')
+      }
+
+      if (initReady) {
+        targets.push('init-terminus', 'init-est')
+      }
+
+      if (showTraceIcons) {
+        targets.push('link-github', 'link-linkedin')
+      }
+
+      const nextTarget = targets[Math.floor(Math.random() * targets.length)]
+      setGlitchTarget(nextTarget)
+
+      clearTimeoutId = window.setTimeout(() => {
+        setGlitchTarget((current) => (current === nextTarget ? null : current))
+      }, GLITCH_DURATION_MS)
+
+      cycleTimeoutId = window.setTimeout(pulseAmbient, nextAmbientGlitchDelay())
     }
 
-    timeoutId = window.setTimeout(pulse, nextNameDelay())
+    cycleTimeoutId = window.setTimeout(pulseAmbient, nextAmbientGlitchDelay())
 
     return () => {
-      window.clearTimeout(timeoutId)
+      window.clearTimeout(cycleTimeoutId)
+      window.clearTimeout(clearTimeoutId)
     }
-  }, [])
+  }, [initReady, showSubtitle, showTraceIcons])
 
   useEffect(() => {
     let initIntervalId
@@ -205,21 +229,19 @@ export default function HomePage() {
   }, [introQuote])
 
   useEffect(() => {
-    const pulseSkill = () => {
-      const nextSkill = SKILLS[Math.floor(Math.random() * SKILLS.length)]
-      setActiveSkill(nextSkill)
-
-      window.setTimeout(() => {
-        setActiveSkill((current) => (current === nextSkill ? null : current))
-      }, 500)
+    if (titleMode !== 'resolved') {
+      setShowSubtitle(false)
+      return undefined
     }
 
-    const intervalId = window.setInterval(pulseSkill, 47000)
+    const timeoutId = window.setTimeout(() => {
+      setShowSubtitle(true)
+    }, 180)
 
     return () => {
-      window.clearInterval(intervalId)
+      window.clearTimeout(timeoutId)
     }
-  }, [])
+  }, [titleMode])
 
   return (
     <div className="min-h-screen px-6 py-10 text-foreground sm:py-16">
@@ -227,56 +249,96 @@ export default function HomePage() {
         <ParallaxPanel
           as="section"
           className="w-full"
-          innerClassName="rounded-[2rem] border border-border/70 bg-card/95 p-8 shadow-[0_24px_80px_rgba(24,20,34,0.16)] backdrop-blur sm:p-12"
+          frameClassName="border border-border/70 bg-card/95 shadow-[0_24px_80px_rgba(24,20,34,0.16)]"
+          innerClassName="p-8 sm:p-12"
         >
           <div className="flex flex-col gap-6">
             <span className="inline-flex w-fit items-baseline gap-0.5 font-mono text-xs uppercase tracking-[0.3em] text-primary before:text-primary/65 before:content-['//_']">
-              <span>{initLabel}</span>
+              {initReady ? (
+                <>
+                  <span>Init </span>
+
+                  <span className={glitchTarget === 'init-terminus' ? 'glitch-text-active' : ''}>
+                    Terminus
+                  </span>
+
+                  <span className={glitchTarget === 'init-est' ? 'glitch-text-active' : ''}>Est</span>
+                </>
+              ) : (
+                <span>{initLabel}</span>
+              )}
 
               <span className="terminal-cursor text-secondary" aria-hidden="true" />
             </span>
 
-            <div className="min-h-[4.75rem] w-full overflow-hidden sm:min-h-[5.75rem]">
-              <Header
-                title={
-                  titleMode === 'resolved' ? (
-                    <>
-                      <span className="text-signal">D</span>
-                      <span>avid </span>
-                      <span className="text-signal">M</span>
-                      <span>ountford</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{displayTitle}</span>
+            <div className="w-full">
+              <div className="flex flex-col gap-1 sm:gap-1.5">
+                <div className="relative min-h-[5.75rem] w-full overflow-hidden sm:min-h-[4.75rem]">
+                  <div className="pointer-events-none invisible">
+                    <Header
+                      title={
+                        <>
+                          <span className="text-signal">D</span>
+                          <span>avid </span>
+                          <span className="text-signal">M</span>
+                          <span>ountford</span>
+                        </>
+                      }
+                      className="leading-tight font-display text-[3rem] tracking-tight text-foreground min-[360px]:text-[3.4rem] sm:text-5xl"
+                    />
+                  </div>
 
-                      {titleMode !== 'resolved' && (
+                  <div className="absolute inset-0">
+                    <Header
+                      title={
+                        <>
+                          <span className="text-signal">D</span>
+                          <span>avid </span>
+                          <span className="text-signal">M</span>
+                          <span>ountford</span>
+                        </>
+                      }
+                      pulsing={glitchTarget === 'title'}
+                      className={`leading-tight font-display text-[3rem] tracking-tight text-foreground transition-opacity duration-500 ease-out min-[360px]:text-[3.4rem] sm:text-5xl ${
+                        isResolved ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                  </div>
+
+                  {!isResolved && (
+                    <div
+                      aria-hidden="true"
+                      className={`absolute inset-0 flex items-start overflow-hidden leading-tight font-mono text-2xl tracking-[0.04em] text-signal sm:text-3xl ${
+                        glitchTarget === 'title' ? 'glitch-text-active' : ''
+                      }`}
+                    >
+                      <span>
+                        <span>{displayTitle}</span>
+
                         <span
                           className="terminal-cursor ml-1 inline-block align-baseline text-signal"
                           aria-hidden="true"
                         />
-                      )}
-                    </>
-                  )
-                }
-                pulsing={glitchPulse}
-                className={`leading-tight transition-all duration-700 ease-out ${
-                  titleMode === 'resolved'
-                    ? 'font-display text-[3rem] tracking-tight text-foreground min-[360px]:text-[3.4rem] sm:text-5xl'
-                    : 'font-mono text-2xl tracking-[0.04em] text-signal sm:text-3xl'
-                }`}
-              />
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="min-h-[1.25rem] sm:min-h-[1.5rem]">
+                  {showSubtitle && (
+                    <p
+                      className={`animate-in fade-in slide-in-from-bottom-1 duration-500 font-mono text-sm uppercase tracking-[0.28em] text-muted-foreground sm:text-base ${
+                        glitchTarget === 'subtitle' ? 'glitch-text-active' : ''
+                      }`}
+                    >
+                      {HEADER_SUBTITLE}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <div className="max-w-3xl space-y-4 text-lg leading-8 text-muted-foreground">
-              <p>
-                <span className="inline-flex items-center gap-2">
-                  <Search className="size-5 text-primary" aria-hidden="true" />
-
-                  <span>Locating Software Engineer...</span>
-                </span>
-              </p>
-
+            <div className="max-w-3xl space-y-5 pt-1 text-lg leading-8 text-muted-foreground sm:space-y-6 sm:pt-2">
               <div className="space-y-3">
                 <p className="font-mono text-sm tracking-[0.08em] text-muted-foreground">
                   Selected Skills <span className="text-signal">=&gt;</span>
@@ -287,7 +349,7 @@ export default function HomePage() {
                     <span
                       key={skill}
                       className={`rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-mono text-sm tracking-[0.12em] text-primary ${
-                        activeSkill === skill ? 'glitch-text-active' : ''
+                        glitchTarget === `skill:${skill}` ? 'glitch-text-active' : ''
                       }`}
                     >
                       {skill}
@@ -312,10 +374,14 @@ export default function HomePage() {
                 aria-label="GitHub profile"
                 aria-hidden={!showTraceIcons}
                 tabIndex={showTraceIcons ? undefined : -1}
-                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
+                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color,box-shadow] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
                   showTraceIcons
                     ? 'translate-y-0 opacity-100'
                     : 'pointer-events-none translate-y-2 opacity-0'
+                } ${
+                  glitchTarget === 'link-github'
+                    ? 'border-primary/35 bg-primary/12 text-primary shadow-[0_0_0_1px_rgba(91,33,182,0.16),0_0_24px_rgba(91,33,182,0.18)]'
+                    : ''
                 }`}
                 style={{ transitionDelay: showTraceIcons ? '0ms' : '0ms' }}
               >
@@ -336,10 +402,14 @@ export default function HomePage() {
                 aria-label="LinkedIn profile"
                 aria-hidden={!showTraceIcons}
                 tabIndex={showTraceIcons ? undefined : -1}
-                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
+                className={`inline-flex size-10 items-center justify-center rounded-md border border-secondary/45 bg-secondary/18 text-secondary shadow-[0_6px_20px_rgba(15,143,130,0.12)] transition-[opacity,transform,border-color,background-color,color,box-shadow] duration-500 hover:border-primary/35 hover:bg-primary/12 hover:text-primary ${
                   showTraceIcons
                     ? 'translate-y-0 opacity-100'
                     : 'pointer-events-none translate-y-2 opacity-0'
+                } ${
+                  glitchTarget === 'link-linkedin'
+                    ? 'border-primary/35 bg-primary/12 text-primary shadow-[0_0_0_1px_rgba(91,33,182,0.16),0_0_24px_rgba(91,33,182,0.18)]'
+                    : ''
                 }`}
                 style={{ transitionDelay: showTraceIcons ? '90ms' : '0ms' }}
               >

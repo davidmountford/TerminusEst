@@ -39,6 +39,7 @@ describe('ParallaxPanel', () => {
     )
 
     const panel = container.querySelector('.parallax-panel')
+    const frame = container.querySelector('.parallax-frame')
     const card = container.querySelector('.parallax-card')
 
     panel.getBoundingClientRect = vi.fn(() => ({
@@ -55,13 +56,17 @@ describe('ParallaxPanel', () => {
 
     fireEvent.pointerMove(panel, { clientX: 180, clientY: 10 })
 
-    expect(card.style.getPropertyValue('--tilt-x')).toBe('6.40deg')
-    expect(card.style.getPropertyValue('--tilt-y')).toBe('6.40deg')
+    expect(frame.style.transform).toBe(
+      'perspective(1400px) rotateX(5.76deg) rotateY(5.76deg) scale3d(1.01, 1.01, 1.01)'
+    )
+    expect(card.style.transform).toBe('perspective(1100px) rotateX(0.77deg) rotateY(0.77deg)')
 
     fireEvent.pointerLeave(panel)
 
-    expect(card.style.getPropertyValue('--tilt-x')).toBe('0deg')
-    expect(card.style.getPropertyValue('--tilt-y')).toBe('0deg')
+    expect(frame.style.transform).toBe(
+      'perspective(1400px) rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1.01)'
+    )
+    expect(card.style.transform).toBe('perspective(1100px) rotateX(0deg) rotateY(0deg)')
   })
 
   it('does not update the tilt when reduced motion is enabled', () => {
@@ -83,6 +88,7 @@ describe('ParallaxPanel', () => {
     )
 
     const panel = container.querySelector('.parallax-panel')
+    const frame = container.querySelector('.parallax-frame')
     const card = container.querySelector('.parallax-card')
 
     panel.getBoundingClientRect = vi.fn(() => ({
@@ -99,8 +105,8 @@ describe('ParallaxPanel', () => {
 
     fireEvent.pointerMove(panel, { clientX: 180, clientY: 10 })
 
-    expect(card.style.getPropertyValue('--tilt-x')).toBe('')
-    expect(card.style.getPropertyValue('--tilt-y')).toBe('')
+    expect(frame.style.transform).toBe('')
+    expect(card.style.transform).toBe('')
   })
 
   it('gracefully exits when the moving layer is missing', () => {

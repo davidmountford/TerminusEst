@@ -1,13 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: "Rajdhani", sans-serif;
-  --font-display: "Orbitron", sans-serif;
-  --font-mono: "Share Tech Mono", monospace;
+  --font-sans: var(--font-rajdhani), sans-serif;
+  --font-display: var(--font-orbitron), sans-serif;
+  --font-mono: var(--font-share-tech-mono), monospace;
+}
+
+.font-sans {
+  font-family: var(--font-rajdhani), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-orbitron), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-share-tech-mono), monospace;
 }
 
 :root {
@@ -282,28 +293,39 @@ body::after {
 
 .parallax-panel {
   position: relative;
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
 }
 
-.parallax-card {
+.parallax-frame {
   position: relative;
   width: 100%;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  transform: perspective(1100px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) scale3d(1.01, 1.01, 1.01);
-  transition: transform 70ms ease-out, box-shadow 120ms ease-out;
+  overflow: hidden;
+  isolation: isolate;
   clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  transform: perspective(1400px) rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1.01);
+  transition: transform 90ms ease-out, box-shadow 120ms ease-out;
   box-shadow:
     0 0 0 1px rgba(0, 229, 204, 0.1),
     0 0 40px rgba(123, 47, 255, 0.25),
     0 0 80px rgba(0, 229, 204, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  will-change: transform;
+}
+
+.parallax-card {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateX(0deg) rotateY(0deg);
+  transition: transform 70ms ease-out;
   backface-visibility: hidden;
   will-change: transform;
 }
 
-.parallax-panel:hover .parallax-card {
+.parallax-panel:hover .parallax-frame {
   box-shadow:
     0 0 0 1px rgba(0, 229, 204, 0.16),
     0 0 56px rgba(123, 47, 255, 0.32),
@@ -311,7 +333,7 @@ body::after {
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.parallax-card::before {
+.parallax-frame::before {
   content: "";
   position: absolute;
   top: 0;
@@ -323,7 +345,7 @@ body::after {
   clip-path: polygon(100% 0, 100% 100%, 0 0);
 }
 
-.parallax-card::after {
+.parallax-frame::after {
   content: "";
   position: absolute;
   bottom: 0;
