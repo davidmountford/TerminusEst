@@ -1,0 +1,48 @@
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import TacticalOverlayNav from '@/components/TacticalOverlayNav'
+
+describe('TacticalOverlayNav', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('opens the overlay and exposes the available routes', async () => {
+    const user = userEvent.setup()
+
+    render(<TacticalOverlayNav />)
+
+    await user.click(screen.getByRole('button', { name: /trace route/i }))
+
+    expect(screen.getByRole('dialog', { name: /active sectors/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /about/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /projects/i })).toBeInTheDocument()
+  })
+
+  it('notifies the page when a section is selected and closes the overlay', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+
+    render(<TacticalOverlayNav onSelect={onSelect} activeSection="about" />)
+
+    await user.click(screen.getByRole('button', { name: /trace route/i }))
+    await user.click(screen.getByRole('button', { name: /about/i }))
+
+    expect(onSelect).toHaveBeenCalledWith('about')
+    expect(screen.queryByRole('dialog', { name: /active sectors/i })).not.toBeInTheDocument()
+  })
+
+  it('shows a home route inside the overlay when not on the homepage', async () => {
+    const user = userEvent.setup()
+    const onHome = vi.fn()
+
+    render(<TacticalOverlayNav onHome={onHome} activeSection="projects" />)
+
+    await user.click(screen.getByRole('button', { name: /trace route/i }))
+    await user.click(screen.getByRole('button', { name: /home/i }))
+
+    expect(onHome).toHaveBeenCalledTimes(1)
+  })
+})
