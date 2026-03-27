@@ -1,4 +1,5 @@
 import '@styles/globals.css'
+import '@styles/parallax-frame-overrides.css'
 import ThemeClientShell from '@components/ThemeClientShell'
 import { Orbitron, Rajdhani, Share_Tech_Mono } from 'next/font/google'
 
