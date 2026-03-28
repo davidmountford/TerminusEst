@@ -189,7 +189,7 @@ body::after {
     transparent,
     transparent 2px,
     var(--page-scanline) 2px,
-    var(--page-scanline) 4px
+    var(--page-scanline) 4px,
   );
   opacity: var(--page-scanline-opacity);
   z-index: 30;

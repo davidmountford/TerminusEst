@@ -40,13 +40,12 @@ const SKILLS = [
 const SECTION_CONTENT = {
   about: {
     eyebrow: '01 // About',
-    title: 'Operator Profile',
+    title: 'Terminus Est is...',
     intro:
-      'I build web applications, product platforms, and AI-assisted tooling with a bias toward clarity, maintainability, and shipping the thing properly.',
+      '',
     body: [
-      'Most of the work lives where frontend feel, backend reliability, and delivery discipline collide. That is usually where the interesting problems are hiding anyway.',
-      'The goal is straightforward: systems that look sharp, read clearly, and do not turn feral the moment real users touch them.'
-    ]
+      '',
+    ],
   },
   projects: {
     eyebrow: '02 // Projects',
@@ -55,9 +54,9 @@ const SECTION_CONTENT = {
       'The project layer is where product thinking, interface craft, and infrastructure habits get braided together into something useful.',
     body: [
       'This section is ready to become the main showcase surface for case studies, shipped work, experiments, or whatever shape your next pass takes.',
-      'Right now it is acting as the transition target so we can tune the choreography before you decide what content architecture comes next.'
-    ]
-  }
+      'Right now it is acting as the transition target so we can tune the choreography before you decide what content architecture comes next.',
+    ],
+  },
 }
 
 const ENCRYPTION_CHARS =
@@ -99,7 +98,11 @@ function renderStyledHeaderTitle(value) {
   )
 }
 
-export default function HomePageShell({ initialSection = null }) {
+export default function HomePageShell({
+  initialSection = null,
+  sidebarSlot = null,
+  contentAside = null,
+}) {
   const router = useRouter()
   const [glitchTarget, setGlitchTarget] = useState(null)
   const [activeSection, setActiveSection] = useState(initialSection)
@@ -360,7 +363,12 @@ export default function HomePageShell({ initialSection = null }) {
         >
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 right-0 z-0 h-64 w-64 translate-x-[33%] translate-y-[33%] opacity-60 sm:h-80 sm:w-80"
+            className={cn(
+              'pointer-events-none absolute z-0 opacity-60',
+              activeSection
+                ? 'bottom-6 left-1/2 h-40 w-40 -translate-x-1/2 sm:h-48 sm:w-48'
+                : 'bottom-0 right-0 h-64 w-64 translate-x-[33%] translate-y-[33%] sm:h-80 sm:w-80'
+            )}
             style={{
               background:
                 'radial-gradient(circle at 35% 35%, rgba(123,47,255,0.16), rgba(0,229,204,0.08) 58%, rgba(0,229,204,0.02) 100%)',
@@ -371,7 +379,7 @@ export default function HomePageShell({ initialSection = null }) {
               maskImage: 'url(/kamon_bw.svg)',
               maskRepeat: 'no-repeat',
               maskPosition: 'center',
-              maskSize: 'contain'
+              maskSize: 'contain',
             }}
           />
 
@@ -582,18 +590,18 @@ export default function HomePageShell({ initialSection = null }) {
 
             {activeSection ? (
               <div className="mt-auto animate-in fade-in slide-in-from-bottom-2 duration-500 pt-6">
-                <div className="flex items-center justify-between gap-4 border-t border-primary/18 pt-4">
-                  <p className="translate-y-px font-mono text-[0.68rem] uppercase tracking-[0.28em] text-secondary">
-                    Sidebar Mode
-                  </p>
+                <div className="border-t border-primary/18 pt-4">
+                  {sidebarSlot ? <div className="mb-4">{sidebarSlot}</div> : null}
 
-                  <button
-                    type="button"
-                    onClick={handleReturnHome}
-                    className="inline-flex items-center rounded-md border border-primary/30 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.22em] text-primary transition-colors duration-200 hover:border-secondary/50 hover:text-secondary"
-                  >
-                    Return Home
-                  </button>
+                  <div className="flex justify-center">
+                    <button
+                      type="button"
+                      onClick={handleReturnHome}
+                      className="inline-flex items-center rounded-md border border-primary/30 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.22em] text-primary transition-colors duration-200 hover:border-secondary/50 hover:text-secondary"
+                    >
+                      Return Home
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -634,15 +642,12 @@ export default function HomePageShell({ initialSection = null }) {
                       ))}
                     </div>
 
-                    <aside className="rounded-[1.5rem] border border-primary/18 bg-[linear-gradient(180deg,rgba(123,47,255,0.08),rgba(0,0,0,0))] p-5">
-                      <p className="font-mono text-xs uppercase tracking-[0.28em] text-primary">
-                        Route Status
-                      </p>
-
-                      <p className="mt-4 text-base leading-7 text-muted-foreground">
-                        This is the first-pass section surface. Once you explain the next content direction, we can replace this scaffold with the real structure and keep the transition system intact.
-                      </p>
-                    </aside>
+                    {contentAside 
+                      ? (
+                          <aside>{contentAside}</aside>
+                        ) 
+                          : null
+                        }
                   </div>
                 </div>
               </div>
