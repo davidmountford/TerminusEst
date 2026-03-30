@@ -56,4 +56,18 @@ describe('TacticalOverlayNav', () => {
 
     expect(onHome).toHaveBeenCalledTimes(1)
   })
+
+  it('restores document scrolling when the overlay closes', async () => {
+    const user = userEvent.setup()
+
+    render(<TacticalOverlayNav projectsEnabled />)
+
+    await user.click(screen.getByRole('button', { name: /trace route/i }))
+    expect(document.body.style.overflow).toBe('hidden')
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('dialog', { name: /active sectors/i })).not.toBeInTheDocument()
+    expect(document.body.style.overflow).toBe('')
+  })
 })
