@@ -12,20 +12,31 @@ describe('TacticalOverlayNav', () => {
   it('opens the overlay and exposes the available routes', async () => {
     const user = userEvent.setup()
 
-    render(<TacticalOverlayNav />)
+    render(<TacticalOverlayNav projectsEnabled />)
 
     await user.click(screen.getByRole('button', { name: /trace route/i }))
 
     expect(screen.getByRole('dialog', { name: /active sectors/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /about/i })).toBeInTheDocument()
+
     expect(screen.getByRole('button', { name: /projects/i })).toBeInTheDocument()
+  })
+
+  it('hides the projects route when projects are disabled', async () => {
+    const user = userEvent.setup()
+
+    render(<TacticalOverlayNav projectsEnabled={false} />)
+
+    await user.click(screen.getByRole('button', { name: /trace route/i }))
+
+    expect(screen.queryByRole('button', { name: /projects/i })).not.toBeInTheDocument()
   })
 
   it('notifies the page when a section is selected and closes the overlay', async () => {
     const user = userEvent.setup()
     const onSelect = vi.fn()
 
-    render(<TacticalOverlayNav onSelect={onSelect} activeSection="about" />)
+    render(<TacticalOverlayNav onSelect={onSelect} activeSection="about" projectsEnabled />)
 
     await user.click(screen.getByRole('button', { name: /trace route/i }))
     await user.click(screen.getByRole('button', { name: /about/i }))
@@ -38,7 +49,7 @@ describe('TacticalOverlayNav', () => {
     const user = userEvent.setup()
     const onHome = vi.fn()
 
-    render(<TacticalOverlayNav onHome={onHome} activeSection="projects" />)
+    render(<TacticalOverlayNav onHome={onHome} activeSection="projects" projectsEnabled />)
 
     await user.click(screen.getByRole('button', { name: /trace route/i }))
     await user.click(screen.getByRole('button', { name: /home/i }))

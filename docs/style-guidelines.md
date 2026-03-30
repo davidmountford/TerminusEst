@@ -35,6 +35,8 @@
 - Prefer project theme tokens such as `bg-primary`, `text-secondary`, `border-primary/35`, and `text-signal`.
 - Use stock Tailwind colors only when they are not user-facing theme colors.
 - Do not substitute approximate Tailwind violets/teals when the exact brand colors matter.
+- For cards, panels, and interactive surfaces, prefer theme-aware tokens such as `bg-card`, `text-foreground`, `border-border`, and token-based alpha variants instead of hardcoded dark RGB gradients.
+- If a surface needs atmospheric treatment, layer it on top of a theme-aware base with subtle overlays or glow helpers rather than baking the entire component into dark mode.
 
 ## Typography
 
@@ -62,6 +64,7 @@
 - Cards can use clipped corners, subtle borders, and layered glow.
 - Glassmorphism is acceptable only when paired with strong contrast and clean text.
 - Decorative corners should be sparse and purposeful.
+- Card backgrounds must respond correctly to light and dark theme switching. Check both modes before considering a card finished.
 
 ### Buttons
 - Primary actions should usually lean on `secondary` with dark text.
@@ -115,6 +118,7 @@
 - Keep more bespoke effects in reusable CSS classes or components.
 - When an effect needs custom CSS, give it a clear reusable name.
 - Extract repeatable hero patterns into components instead of repeating long utility chains.
+- When building new UI, verify theme switching early. Do not leave light mode as a cleanup pass after styling is already locked in.
 
 ## Current Reusable Theme Hooks
 - Theme tokens live in [styles/globals.css](../styles/globals.css).
