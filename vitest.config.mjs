@@ -28,7 +28,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       include: ['components/**/*.js', 'lib/**/*.js'],
-      exclude: ['tests/**', 'components/HomePageShell.js', 'components/NotFoundPageClient.js'],
+      exclude: ['tests/**'],
     },
   },
 })
